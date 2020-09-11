@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -24,6 +25,7 @@ public class LeadingLeadersFragment extends Fragment {
     private HourLeadersAdapter mAdapter;
     private List<HourLeader> mLeaders;
     private LeaderBoardViewModel mViewModel;
+    private ProgressBar mProgressBar;
 
     public LeadingLeadersFragment() {
         // Required empty public constructor
@@ -40,6 +42,18 @@ public class LeadingLeadersFragment extends Fragment {
             @Override
             public void onChanged(List<HourLeader> hourLeaders) {
                 mAdapter.setData(hourLeaders);
+                mViewModel.setBusy(false);
+            }
+        });
+
+        mViewModel.isBusy().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean busy) {
+                if (busy) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                } else {
+                    mProgressBar.setVisibility(View.GONE);
+                }
             }
         });
         return view;
@@ -47,6 +61,7 @@ public class LeadingLeadersFragment extends Fragment {
 
     private void init(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mProgressBar = view.findViewById(R.id.progress_bar);
         mAdapter = new HourLeadersAdapter(getContext());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

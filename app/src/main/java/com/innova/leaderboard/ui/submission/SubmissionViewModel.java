@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.innova.leaderboard.LeaderBoardRepository;
 import com.innova.leaderboard.models.SkillLeader;
@@ -13,14 +14,18 @@ import java.util.List;
 
 public class SubmissionViewModel extends AndroidViewModel {
     public final String TAG = this.getClass().getSimpleName();
-    private LeaderBoardRepository mRepository;
+
+    private MutableLiveData<Boolean> isBusy = new MutableLiveData<>();
 
     public SubmissionViewModel(@NonNull Application application) {
         super(application);
-        mRepository = new LeaderBoardRepository(application);
     }
 
-    public LiveData<List<SkillLeader>> getAllSkillLeaders() {
-        return mRepository.getAllSkillLeaders();
+    public LiveData<Boolean> isBusy() {
+        return isBusy;
+    }
+
+    public void setBusy(Boolean busy) {
+        isBusy.setValue(busy);
     }
 }
